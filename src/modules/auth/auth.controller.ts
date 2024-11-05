@@ -6,15 +6,17 @@ import { Permission } from 'src/common/permission.enum';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+  ) {}
 
   @Public()
   @Post('login')
   signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+    return this.authService.signIn(signInDto.email, signInDto.password);
   }
 
-  @RequirePermission(Permission.Update)
+  // @RequirePermission(Permission.Update)
   @Get('/profile')
   getProfile(@Request() req: any) {
     return req.user
