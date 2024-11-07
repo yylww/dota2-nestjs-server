@@ -5,7 +5,7 @@ export type User = any;
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findOne(email: string): Promise<User | undefined> {
     const user = await this.prisma.user.findUnique({

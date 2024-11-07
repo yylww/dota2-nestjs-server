@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/common/decorators/public.decorator';
 import { RequirePermission } from 'src/common/decorators/permission.decorator';
-import { Permission } from 'src/common/permission.enum';
+import { Permission } from 'src/common/enums/permission.enum';
 
 @Controller('auth')
 export class AuthController {
