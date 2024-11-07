@@ -14,7 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    console.log('jwt.strategy.validate', payload);
+    // 添加 user 属性到 Request 对象上 
     return {
       userId: payload.userId,
       username: payload.username,
