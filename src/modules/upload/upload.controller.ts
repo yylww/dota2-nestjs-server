@@ -1,11 +1,19 @@
 import { Controller, FileTypeValidator, MaxFileSizeValidator, ParseFilePipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { FileUploadDto } from './dto/file-upload.dto';
+import { FileUploadEntity } from './entities/file-upload.entity';
 
+@ApiBearerAuth()
 @Controller('upload')
 export class UploadController {
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: FileUploadDto })
+  @ApiQuery({ name: 'dir', required: false })
+  @ApiOkResponse({ type: FileUploadEntity })
   uploadFile(
     @UploadedFile(
       new ParseFilePipe({
@@ -17,7 +25,6 @@ export class UploadController {
     ) file: Express.Multer.File,
   ) {
     return {
-      message: 'success',
       filePath: file.path,
     };
   }

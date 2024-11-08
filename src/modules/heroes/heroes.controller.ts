@@ -3,7 +3,15 @@ import { CreateHeroDto } from './dto/create-hero.dto';
 import { UpdateHeroDto } from './dto/update-hero.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Hero } from '@prisma/client';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiProperty, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { HeroEntity } from './entities/hero.entity';
 
+export enum OrderBy {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+@ApiBearerAuth()
 @Controller('heroes')
 export class HeroesController {
   constructor(
@@ -11,6 +19,7 @@ export class HeroesController {
   ) {}
 
   @Post()
+  @ApiOkResponse({ type: HeroEntity })
   create(@Body() createHeroDto: CreateHeroDto): Promise<Hero> {
     return this.prisma.hero.create({
       data: createHeroDto,
@@ -18,6 +27,7 @@ export class HeroesController {
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: HeroEntity })
   findOne(@Param('id') id: number): Promise<Hero> {
     return this.prisma.hero.findUnique({
       where: { id },
@@ -25,11 +35,16 @@ export class HeroesController {
   }
 
   @Get()
+  @ApiQuery({ name: 'take', type: Number, required: false })
+  @ApiQuery({ name: 'skip', type: Number, required: false })
+  @ApiQuery({ name: 'query', type: String, required: false })
+  @ApiQuery({ name: 'orderBy', enum: OrderBy, required: false })
+  @ApiOkResponse({ type: HeroEntity, isArray: true })
   findFiltered(
     @Query('take') take?: number,
     @Query('skip') skip?: number,
     @Query('query') query?: string,
-    @Query('orderBy') orderBy?: 'asc' | 'desc',
+    @Query('orderBy') orderBy?: OrderBy,
   ): Promise<Hero[]> {
     return this.prisma.hero.findMany({
       where: {
@@ -48,11 +63,9 @@ export class HeroesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateHeroDto: UpdateHeroDto) {
+  update(@Param('id') id: number, @Body() updateHeroDto: UpdateHeroDto) {
     return this.prisma.hero.update({
-      where: {
-        id: +id,
-      },
+      where: { id },
       data: updateHeroDto,
     });
   }

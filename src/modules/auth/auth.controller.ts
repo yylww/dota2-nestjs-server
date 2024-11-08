@@ -5,6 +5,7 @@ import { RequirePermission } from 'src/common/decorators/permission.decorator';
 import { Permission } from 'src/common/enums/permission.enum';
 import { SignInDto } from './dto/sign-in.dto';
 import { AuthEntity } from './entities/auth.entity';
+import { ApiOkResponse } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -14,13 +15,8 @@ export class AuthController {
 
   @Public()
   @Post('login')
+  @ApiOkResponse({ type: AuthEntity })
   signIn(@Body() signInDto: SignInDto): Promise<AuthEntity> {
     return this.authService.signIn(signInDto.email, signInDto.password);
-  }
-
-  // @RequirePermission(Permission.Update)
-  @Get('/profile')
-  getProfile(@Request() req: any) {
-    return req.user
   }
 }
