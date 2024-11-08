@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Request } from '@nestjs/common';
 import { HeroesService } from './heroes.service';
 import { CreateHeroDto } from './dto/create-hero.dto';
 import { UpdateHeroDto } from './dto/update-hero.dto';
@@ -17,45 +17,32 @@ export class HeroesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.prisma.hero.findUnique({
-      where: {
-        id: +id
-      },
+      where: { id },
     });
   }
 
   @Get()
   findFiltered(
+    @Request() req: any,
     @Query('take') take?: number,
     @Query('skip') skip?: number,
     @Query('query') query?: string,
     @Query('orderBy') orderBy?: 'asc' | 'desc',
+    @Query('ids') ids?: number[],
   ) {
+    console.log(req.user);
     return this.prisma.hero.findMany({
       where: {
-        OR: [
-          { 
-            id: { 
-              equals: Number(query) || undefined,  
-            }, 
-          },
-          { 
-            name: { 
-              contains: query, 
-              mode: 'insensitive' 
-            }, 
-          },
-          { 
-            cname: { 
-              contains: query, 
-              mode: 'insensitive', 
-            }, 
-          },
-        ],
+        OR: query ? [
+          { id: { equals: Number(query) || undefined } },
+          { name: { contains: query, mode: 'insensitive' } },
+          { cname: { contains: query, mode: 'insensitive' } },
+        ] : undefined,
       },
-      take: Number(take) || undefined,
-      skip: Number(skip) || undefined,
+      take: take || 10,
+      skip: skip || 0,
       orderBy: {
         updatedAt: orderBy,
       },

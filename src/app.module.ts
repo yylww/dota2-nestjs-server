@@ -3,12 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
-import { APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { PermissionGuard } from './common/guards/permission.guard';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { HeroesModule } from './modules/heroes/heroes.module';
 import { UploadModule } from './modules/upload/upload.module';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 @Module({
   imports: [AuthModule, UsersModule, PrismaModule, HeroesModule, UploadModule],
@@ -25,8 +27,19 @@ import { UploadModule } from './modules/upload/upload.module';
     },
     {
       provide: APP_PIPE,
-      useClass: ValidationPipe,
-    }
+      useValue: new ValidationPipe({
+        whitelist: true,
+        transform: true,
+      })
+    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: HttpExceptionFilter,
+    // },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
   ],
 })
 export class AppModule {}
