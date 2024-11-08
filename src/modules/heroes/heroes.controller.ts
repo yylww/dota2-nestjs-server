@@ -1,23 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Request } from '@nestjs/common';
-import { HeroesService } from './heroes.service';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { CreateHeroDto } from './dto/create-hero.dto';
 import { UpdateHeroDto } from './dto/update-hero.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { Hero } from '@prisma/client';
 
 @Controller('heroes')
 export class HeroesController {
   constructor(
-    private readonly heroesService: HeroesService,
     private readonly prisma: PrismaService,
   ) {}
 
   @Post()
-  create(@Body() createHeroDto: CreateHeroDto) {
-    return this.heroesService.create(createHeroDto);
+  create(@Body() createHeroDto: CreateHeroDto): Promise<Hero> {
+    return this.prisma.hero.create({
+      data: createHeroDto,
+    });
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: number): Promise<Hero> {
     return this.prisma.hero.findUnique({
       where: { id },
     });
@@ -25,14 +26,11 @@ export class HeroesController {
 
   @Get()
   findFiltered(
-    @Request() req: any,
     @Query('take') take?: number,
     @Query('skip') skip?: number,
     @Query('query') query?: string,
     @Query('orderBy') orderBy?: 'asc' | 'desc',
-    @Query('ids') ids?: number[],
-  ) {
-    console.log(req.user);
+  ): Promise<Hero[]> {
     return this.prisma.hero.findMany({
       where: {
         OR: query ? [
@@ -60,7 +58,9 @@ export class HeroesController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.heroesService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.prisma.hero.delete({
+      where: { id },
+    });
   }
 }

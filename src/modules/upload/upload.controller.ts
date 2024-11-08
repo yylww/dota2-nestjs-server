@@ -1,11 +1,9 @@
 import { Controller, FileTypeValidator, MaxFileSizeValidator, ParseFilePipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('upload')
 export class UploadController {
 
-  @Public()
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(
