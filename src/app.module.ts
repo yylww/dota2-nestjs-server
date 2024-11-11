@@ -11,9 +11,10 @@ import { HeroesModule } from './modules/heroes/heroes.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { RegionsModule } from './modules/regions/regions.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, PrismaModule, HeroesModule, UploadModule],
+  imports: [AuthModule, UsersModule, PrismaModule, HeroesModule, UploadModule, RegionsModule],
   controllers: [AppController],
   providers: [
     AppService,
@@ -36,10 +37,10 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
     //   provide: APP_FILTER,
     //   useClass: HttpExceptionFilter,
     // },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: TransformInterceptor,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: TransformInterceptor,
+    // },
   ],
 })
 export class AppModule {}

@@ -1,4 +1,4 @@
-import { Controller, FileTypeValidator, MaxFileSizeValidator, ParseFilePipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, FileTypeValidator, MaxFileSizeValidator, ParseFilePipe, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { FileUploadDto } from './dto/file-upload.dto';
@@ -23,9 +23,10 @@ export class UploadController {
         ]
       })
     ) file: Express.Multer.File,
+    @Query('dir') dir: string,
   ) {
     return {
-      filePath: file.path,
+      filePath: `/${dir}/${file.filename}`,
     };
   }
 }
