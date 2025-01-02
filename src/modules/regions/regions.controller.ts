@@ -4,81 +4,45 @@ import { UpdateRegionDto } from './dto/update-region.dto';
 import { ApiBearerAuth, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegionEntity } from './entities/region.entity';
-import { SortOrder } from 'src/common/enums/sort-order.enum';
-import { FilterDto } from 'src/common/dto/filter.dto';
-import { ApiOkResponsePaginated } from 'src/common/decorators/paginated.decorator';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { ApiOkResponsePaginated } from 'src/common/decorators/paginated-response.decorator';
 import { PaginatedResponseDto } from 'src/common/dto/paginated-response.dto';
-
+import { ApiPagination } from 'src/common/decorators/api-pagination.decorator';
+import { RegionsService } from './regions.service';
 @ApiBearerAuth()
 @Controller('regions')
 export class RegionsController {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly regionsService: RegionsService) {}
 
   @Post()
   @ApiOkResponse({ type: RegionEntity })
   create(@Body() createRegionDto: CreateRegionDto): Promise<RegionEntity> {
-    return this.prisma.region.create({
-      data: createRegionDto,
-    });
+    return this.regionsService.create(createRegionDto);
   }
 
   @Get()
   @ApiQuery({ name: 'take', type: Number, required: false })
-  @ApiQuery({ name: 'skip', type: Number, required: false })
-  @ApiQuery({ name: 'query', type: String, required: false })
-  @ApiQuery({ name: 'orderBy', type: String, required: false })
-  @ApiQuery({ name: 'sortOrder', enum: SortOrder, required: false })
+  @ApiPagination()
   @ApiOkResponsePaginated(RegionEntity)
-  async findFiltered(
-    @Query() filter: FilterDto,
-    @Query('query') query?: string,
-  ): Promise<PaginatedResponseDto<RegionEntity>> {
-    const { take, skip, orderBy, sortOrder } = filter;
-    const list = await this.prisma.region.findMany({
-      where: {
-        OR: query ? [
-          { id: { equals: Number(query) || undefined } },
-          { name: { contains: query, mode: 'insensitive' } },
-          { cname: { contains: query, mode: 'insensitive' } },
-        ] : undefined,
-      },
-      take,
-      skip,
-      orderBy: orderBy ? {
-        [orderBy]: sortOrder,
-      } : undefined,
-    })
-    const total = await this.prisma.region.count();
-    return {
-      list,
-      total,
-    };
+  async findFiltered(): Promise<PaginatedResponseDto<RegionEntity>> {
+    return this.regionsService.findAll();
   }
 
   @Get(':id')
   @ApiOkResponse({ type: RegionEntity })
-  findOne(@Param('id') id: number): Promise<RegionEntity> {
-    return this.prisma.region.findUnique({
-      where: { id },
-    });
+  findOne(@Param('id') id: string): Promise<RegionEntity> {
+    return this.regionsService.findOne(Number(id));
   }
 
   @Patch(':id')
   @ApiOkResponse({ type: RegionEntity })
-  update(@Param('id') id: number, @Body() updateRegionDto: UpdateRegionDto): Promise<RegionEntity> {
-    return this.prisma.region.update({
-      where: { id }, 
-      data: updateRegionDto,
-    });
+  update(@Body() updateRegionDto: UpdateRegionDto & { id: number }): Promise<RegionEntity> {
+    return this.regionsService.update(updateRegionDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    // return this.prisma.region.update({
-    //   where: { id },
-    //   data: {
-    //     isDelete: true,
-    //   },
-    // });
+  @ApiOkResponse({ type: RegionEntity })
+  delete(@Param('id') id: string) {
+    return this.regionsService.delete(Number(id));
   }
 }

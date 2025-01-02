@@ -1,8 +1,8 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
-import { Observable } from "rxjs";
-import { Permission } from "../enums/permission.enum";
-import { PERMISSION_KEY } from "../decorators/permission.decorator";
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { Observable } from 'rxjs';
+import { Permission } from '../enums/permission.enum';
+import { PERMISSION_KEY } from '../decorators/permission.decorator';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -14,9 +14,9 @@ export class PermissionGuard implements CanActivate {
       context.getClass(),
     ]);
     if (!permission) {
-      return true
+      return true;
     }
     const { user } = context.switchToHttp().getRequest();
-    return user.permissions?.includes(permission); 
+    return user.permissions?.includes(permission);
   }
 }

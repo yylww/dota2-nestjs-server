@@ -31,7 +31,7 @@ import { RegionsModule } from './modules/regions/regions.module';
       useValue: new ValidationPipe({
         whitelist: true,
         transform: true,
-      })
+      }),
     },
     // {
     //   provide: APP_FILTER,

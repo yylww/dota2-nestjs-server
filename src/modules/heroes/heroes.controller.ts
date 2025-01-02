@@ -1,86 +1,55 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query, Put } from '@nestjs/common';
 import { CreateHeroDto } from './dto/create-hero.dto';
 import { UpdateHeroDto } from './dto/update-hero.dto';
-import { PrismaService } from '../prisma/prisma.service';
 import { ApiBearerAuth, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { HeroEntity } from './entities/hero.entity';
 import { PaginatedResponseDto } from 'src/common/dto/paginated-response.dto';
-import { FilterDto } from 'src/common/dto/filter.dto';
-import { SortOrder } from 'src/common/enums/sort-order.enum';
-import { ApiOkResponsePaginated } from 'src/common/decorators/paginated.decorator';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { ApiOkResponsePaginated } from 'src/common/decorators/paginated-response.decorator';
+import { ApiPagination } from 'src/common/decorators/api-pagination.decorator';
+import { HeroesService } from './heroes.service';
 
 @ApiBearerAuth()
 @Controller('heroes')
 export class HeroesController {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly heroesService: HeroesService) {}
 
   @Post()
   @ApiOkResponse({ type: HeroEntity })
   create(@Body() createHeroDto: CreateHeroDto): Promise<HeroEntity> {
-    return this.prisma.hero.create({
-      data: createHeroDto,
-    });
+    return this.heroesService.createHero(createHeroDto);
   }
 
   @Get()
-  @ApiQuery({ name: 'take', type: Number, required: false })
-  @ApiQuery({ name: 'skip', type: Number, required: false })
-  @ApiQuery({ name: 'query', type: String, required: false })
-  @ApiQuery({ name: 'orderBy', type: String, required: false })
-  @ApiQuery({ name: 'sortOrder', enum: SortOrder, required: false })
+  @ApiQuery({ name: 'id', type: String, required: false })
+  @ApiQuery({ name: 'cname', type: String, required: false })
+  @ApiQuery({ name: 'name', type: String, required: false })
+  @ApiPagination()
   @ApiOkResponsePaginated(HeroEntity)
   async findFiltered(
-    @Query() filter: FilterDto,
-    @Query('query') query?: string,
+    @Query() pagination: PaginationDto,
+    @Query('id') id?: string,
+    @Query('cname') cname?: string,
+    @Query('name') name?: string,
   ): Promise<PaginatedResponseDto<HeroEntity>> {
-    const { take, skip, orderBy, sortOrder } = filter
-    const list = await this.prisma.hero.findMany({
-      where: {
-        OR: query ? [
-          { id: { equals: Number(query) || undefined } },
-          { name: { contains: query, mode: 'insensitive' } },
-          { cname: { contains: query, mode: 'insensitive' } },
-        ] : undefined,
-      },
-      take,
-      skip,
-      orderBy: orderBy ? {
-        [orderBy]: sortOrder,
-      } : undefined,
-    })
-
-    const total = await this.prisma.hero.count();
-
-    return {
-      list,
-      total,
-    }
+    return this.heroesService.getHeroes(+id, cname, name, pagination);
   }
 
   @Get(':id')
   @ApiOkResponse({ type: HeroEntity })
   findOne(@Param('id') id: number): Promise<HeroEntity> {
-    return this.prisma.hero.findUnique({
-      where: { id },
-    });
+    return this.heroesService.getHero(+id);
   }
 
-  @Patch(':id')
+  @Put()
   @ApiOkResponse({ type: HeroEntity })
-  update(@Param('id') id: number, @Body() updateHeroDto: UpdateHeroDto): Promise<HeroEntity> {
-    return this.prisma.hero.update({
-      where: { id },
-      data: updateHeroDto,
-    });
+  update(@Body() updateHeroDto: UpdateHeroDto) {
+    return this.heroesService.updateHero(updateHeroDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    // return this.prisma.hero.update({
-    //   where: { id },
-    //   data: {
-    //     isDelete: true,
-    //   }
-    // });
+  @ApiOkResponse({ type: HeroEntity })
+  delete(@Param('id') id: number): Promise<HeroEntity> {
+    return this.heroesService.deleteHero(+id);
   }
 }

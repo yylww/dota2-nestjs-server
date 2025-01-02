@@ -13,7 +13,7 @@ export class AuthService {
 
   async signIn(email: string, pass: string): Promise<AuthEntity> {
     const user = await this.usersService.findOne(email);
-    const isPasswordValid = await bcrypt.compare(pass, user.password)
+    const isPasswordValid = await bcrypt.compare(pass, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid password');
     }
