@@ -10,7 +10,11 @@ export class RegionsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<PaginatedResponseDto<RegionEntity>> {
-    const regions = await this.prisma.region.findMany();
+    const regions = await this.prisma.region.findMany({
+      orderBy: {
+        id: 'asc',
+      },
+    });
     return {
       list: regions,
       total: regions.length,

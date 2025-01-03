@@ -26,7 +26,7 @@ export class HeroesController {
   @ApiQuery({ name: 'name', type: String, required: false })
   @ApiPagination()
   @ApiOkResponsePaginated(HeroEntity)
-  async findFiltered(
+  async findPagination(
     @Query() pagination: PaginationDto,
     @Query('id') id?: string,
     @Query('cname') cname?: string,
