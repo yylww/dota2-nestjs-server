@@ -12,9 +12,10 @@ import { UploadModule } from './modules/upload/upload.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { RegionsModule } from './modules/regions/regions.module';
+import { TeamsModule } from './modules/teams/teams.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, PrismaModule, HeroesModule, UploadModule, RegionsModule],
+  imports: [AuthModule, UsersModule, PrismaModule, HeroesModule, UploadModule, RegionsModule, TeamsModule],
   controllers: [AppController],
   providers: [
     AppService,

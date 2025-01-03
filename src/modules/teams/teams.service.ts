@@ -1,48 +1,41 @@
 import { Injectable } from '@nestjs/common';
+import { CreateTeamDto } from './dto/create-team.dto';
+import { UpdateTeamDto } from './dto/update-team.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateHeroDto } from './dto/create-hero.dto';
-import { HeroEntity } from './entities/hero.entity';
+import { TeamEntity } from './entities/team.entity';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { PaginatedResponseDto } from 'src/common/dto/paginated-response.dto';
 import { Prisma } from '@prisma/client';
-import { UpdateHeroDto } from './dto/update-hero.dto';
 
 @Injectable()
-export class HeroesService {
+export class TeamsService {
   constructor(private readonly prisma: PrismaService) {}
-
-  findOne(id: number): Promise<HeroEntity> {
-    return this.prisma.hero.findUnique({
-      where: { id },
-    });
+  create(createTeamDto: CreateTeamDto): Promise<TeamEntity> {
+    return this.prisma.team.create({ data: createTeamDto });
   }
 
   async findPaginated(
     id: number,
-    cname: string,
     name: string,
     pagination: PaginationDto,
-  ): Promise<PaginatedResponseDto<HeroEntity>> {
+  ): Promise<PaginatedResponseDto<TeamEntity>> {
     const { current = 1, pageSize = 10, orderBy, sortOrder } = pagination;
     const skip = (current - 1) * pageSize;
     const take = pageSize;
-    const whereConditions: Prisma.HeroWhereInput = {};
+    const whereConditions: Prisma.TeamWhereInput = {};
     if (id) {
       whereConditions.id = { equals: id };
-    }
-    if (cname) {
-      whereConditions.cname = { contains: cname, mode: 'insensitive' };
     }
     if (name) {
       whereConditions.name = { contains: name, mode: 'insensitive' };
     }
-    const listPromise = this.prisma.hero.findMany({
+    const listPromise = this.prisma.team.findMany({
       where: whereConditions,
       take,
       skip,
       orderBy: orderBy ? { [orderBy]: sortOrder } : undefined,
     });
-    const totalPromise = this.prisma.hero.count({
+    const totalPromise = this.prisma.team.count({
       where: whereConditions,
     });
     const [list, total] = await Promise.all([listPromise, totalPromise]);
@@ -53,22 +46,18 @@ export class HeroesService {
     };
   }
 
-  async create(data: CreateHeroDto): Promise<HeroEntity> {
-    return this.prisma.hero.create({
-      data,
+  findOne(id: number): Promise<TeamEntity> {
+    return this.prisma.team.findUnique({ where: { id } });
+  }
+
+  update(updateTeamDto: UpdateTeamDto): Promise<TeamEntity> {
+    return this.prisma.team.update({
+      where: { id: updateTeamDto.id },
+      data: updateTeamDto,
     });
   }
 
-  async update(data: UpdateHeroDto): Promise<HeroEntity> {
-    return this.prisma.hero.update({
-      where: { id: data.id },
-      data,
-    });
-  }
-
-  async remove(id: number): Promise<HeroEntity> {
-    return this.prisma.hero.delete({
-      where: { id },
-    });
+  remove(id: number): Promise<TeamEntity> {
+    return this.prisma.team.delete({ where: { id } });
   }
 }

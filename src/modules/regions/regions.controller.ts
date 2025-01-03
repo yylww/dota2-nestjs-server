@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CreateRegionDto } from './dto/create-region.dto';
 import { UpdateRegionDto } from './dto/update-region.dto';
 import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
@@ -29,7 +29,7 @@ export class RegionsController {
     return this.regionsService.findOne(Number(id));
   }
 
-  @Put()
+  @Patch()
   @ApiOkResponse({ type: RegionEntity })
   update(@Body() updateRegionDto: UpdateRegionDto & { id: number }): Promise<RegionEntity> {
     return this.regionsService.update(updateRegionDto);
@@ -37,7 +37,7 @@ export class RegionsController {
 
   @Delete(':id')
   @ApiOkResponse({ type: RegionEntity })
-  delete(@Param('id') id: string) {
-    return this.regionsService.delete(Number(id));
+  remove(@Param('id') id: string): Promise<RegionEntity> {
+    return this.regionsService.remove(Number(id));
   }
 }

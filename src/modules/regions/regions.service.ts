@@ -21,19 +21,19 @@ export class RegionsService {
     };
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<RegionEntity> {
     return this.prisma.region.findUnique({ where: { id } });
   }
 
-  async create(data: CreateRegionDto) {
+  async create(data: CreateRegionDto): Promise<RegionEntity> {
     return this.prisma.region.create({ data });
   }
 
-  async update(data: UpdateRegionDto & { id: number }) {
+  async update(data: UpdateRegionDto & { id: number }): Promise<RegionEntity> {
     return this.prisma.region.update({ where: { id: data.id }, data });
   }
 
-  async delete(id: number) {
+  async remove(id: number): Promise<RegionEntity> {
     return this.prisma.region.delete({ where: { id } });
   }
 }
