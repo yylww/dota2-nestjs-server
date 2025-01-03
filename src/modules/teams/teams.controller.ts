@@ -29,8 +29,9 @@ export class TeamsController {
     @Query() pagination: PaginationDto,
     @Query('id') id?: string,
     @Query('name') name?: string,
+    @Query('regionId') regionId?: string,
   ): Promise<PaginatedResponseDto<TeamEntity>> {
-    return this.teamsService.findPaginated(+id, name, pagination);
+    return this.teamsService.findPaginated(+id, name, +regionId, pagination);
   }
 
   @Get(':id')

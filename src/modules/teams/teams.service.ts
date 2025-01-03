@@ -17,6 +17,7 @@ export class TeamsService {
   async findPaginated(
     id: number,
     name: string,
+    regionId: number,
     pagination: PaginationDto,
   ): Promise<PaginatedResponseDto<TeamEntity>> {
     const { current = 1, pageSize = 10, orderBy, sortOrder } = pagination;
@@ -27,10 +28,29 @@ export class TeamsService {
       whereConditions.id = { equals: id };
     }
     if (name) {
-      whereConditions.name = { contains: name, mode: 'insensitive' };
+      whereConditions.OR = [
+        { name: { contains: name, mode: 'insensitive' } },
+        { tag: { contains: name, mode: 'insensitive' } },
+      ];
+    }
+    if (regionId) {
+      whereConditions.regionId = { equals: regionId };
     }
     const listPromise = this.prisma.team.findMany({
       where: whereConditions,
+      include: {
+        region: {
+          select: {
+            name: true,
+          },
+        },
+        players: {
+          select: {
+            nickname: true,
+            position: true,
+          },
+        },
+      },
       take,
       skip,
       orderBy: orderBy ? { [orderBy]: sortOrder } : undefined,
