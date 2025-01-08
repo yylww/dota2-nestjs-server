@@ -14,9 +14,10 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { RegionsModule } from './modules/regions/regions.module';
 import { TeamsModule } from './modules/teams/teams.module';
 import { PlayersModule } from './modules/players/players.module';
+import { AchievementsModule } from './modules/achievements/achievements.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, PrismaModule, HeroesModule, UploadModule, RegionsModule, TeamsModule, PlayersModule],
+  imports: [AuthModule, UsersModule, PrismaModule, HeroesModule, UploadModule, RegionsModule, TeamsModule, PlayersModule, AchievementsModule],
   controllers: [AppController],
   providers: [
     AppService,

@@ -31,7 +31,7 @@ export class RegionsController {
 
   @Patch()
   @ApiOkResponse({ type: RegionEntity })
-  update(@Body() updateRegionDto: UpdateRegionDto & { id: number }): Promise<RegionEntity> {
+  update(@Body() updateRegionDto: UpdateRegionDto): Promise<RegionEntity> {
     return this.regionsService.update(updateRegionDto);
   }
 

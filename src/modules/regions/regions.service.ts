@@ -29,7 +29,7 @@ export class RegionsService {
     return this.prisma.region.create({ data });
   }
 
-  async update(data: UpdateRegionDto & { id: number }): Promise<RegionEntity> {
+  async update(data: UpdateRegionDto): Promise<RegionEntity> {
     return this.prisma.region.update({ where: { id: data.id }, data });
   }
 
