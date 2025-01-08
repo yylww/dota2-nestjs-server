@@ -13,9 +13,10 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { RegionsModule } from './modules/regions/regions.module';
 import { TeamsModule } from './modules/teams/teams.module';
+import { PlayersModule } from './modules/players/players.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, PrismaModule, HeroesModule, UploadModule, RegionsModule, TeamsModule],
+  imports: [AuthModule, UsersModule, PrismaModule, HeroesModule, UploadModule, RegionsModule, TeamsModule, PlayersModule],
   controllers: [AppController],
   providers: [
     AppService,

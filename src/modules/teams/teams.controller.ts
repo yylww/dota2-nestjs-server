@@ -19,6 +19,12 @@ export class TeamsController {
     return this.teamsService.create(createTeamDto);
   }
 
+  @Get('all')
+  @ApiOkResponse({ type: [TeamEntity] })
+  findAll(): Promise<TeamEntity[]> {
+    return this.teamsService.findAll();
+  }
+
   @Get()
   @ApiQuery({ name: 'id', type: String, required: false })
   @ApiQuery({ name: 'cname', type: String, required: false })

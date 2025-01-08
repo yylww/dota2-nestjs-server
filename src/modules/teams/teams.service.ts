@@ -10,8 +10,13 @@ import { Prisma } from '@prisma/client';
 @Injectable()
 export class TeamsService {
   constructor(private readonly prisma: PrismaService) {}
+
   create(createTeamDto: CreateTeamDto): Promise<TeamEntity> {
     return this.prisma.team.create({ data: createTeamDto });
+  }
+
+  findAll(): Promise<TeamEntity[]> {
+    return this.prisma.team.findMany();
   }
 
   async findPaginated(
