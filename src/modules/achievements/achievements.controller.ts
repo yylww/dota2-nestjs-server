@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { AchievementsService } from './achievements.service';
 import { CreateAchievementDto } from './dto/create-achievement.dto';
 import { UpdateAchievementDto } from './dto/update-achievement.dto';
-import { Public } from 'src/common/decorators/public.decorator';
 import { ApiQuery } from '@nestjs/swagger';
 import { ApiPagination } from 'src/common/decorators/api-pagination.decorator';
 import { ApiOkResponsePaginated } from 'src/common/decorators/paginated-response.decorator';
@@ -19,7 +18,6 @@ export class AchievementsController {
     return this.achievementsService.create(createAchievementDto);
   }
 
-  @Public()
   @Get()
   @ApiQuery({ name: 'playerId', type: Number, required: false })
   @ApiQuery({ name: 'teamId', type: Number, required: false })

@@ -15,9 +15,21 @@ import { RegionsModule } from './modules/regions/regions.module';
 import { TeamsModule } from './modules/teams/teams.module';
 import { PlayersModule } from './modules/players/players.module';
 import { AchievementsModule } from './modules/achievements/achievements.module';
+import { TournamentsModule } from './modules/tournaments/tournaments.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, PrismaModule, HeroesModule, UploadModule, RegionsModule, TeamsModule, PlayersModule, AchievementsModule],
+  imports: [
+    AuthModule,
+    UsersModule,
+    PrismaModule,
+    HeroesModule,
+    UploadModule,
+    RegionsModule,
+    TeamsModule,
+    PlayersModule,
+    AchievementsModule,
+    TournamentsModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
@@ -33,7 +45,6 @@ import { AchievementsModule } from './modules/achievements/achievements.module';
       provide: APP_PIPE,
       useValue: new ValidationPipe({
         whitelist: true,
-        transform: true,
       }),
     },
     // {

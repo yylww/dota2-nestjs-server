@@ -19,7 +19,7 @@ export class RegionsController {
 
   @Get()
   @ApiOkResponsePaginated(RegionEntity)
-  async findPagination(): Promise<PaginatedResponseDto<RegionEntity>> {
+  async findAll(): Promise<PaginatedResponseDto<RegionEntity>> {
     return this.regionsService.findAll();
   }
 

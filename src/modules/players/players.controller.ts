@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { PlayersService } from './players.service';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
-import { Public } from 'src/common/decorators/public.decorator';
 import { ApiQuery } from '@nestjs/swagger';
 import { ApiPagination } from 'src/common/decorators/api-pagination.decorator';
 import { ApiOkResponsePaginated } from 'src/common/decorators/paginated-response.decorator';
@@ -19,7 +18,6 @@ export class PlayersController {
     return this.playersService.create(createPlayerDto);
   }
 
-  @Public()
   @Get()
   @ApiQuery({ name: 'id', type: String, required: false })
   @ApiQuery({ name: 'nickname', type: String, required: false })
@@ -33,6 +31,11 @@ export class PlayersController {
     @Query('teamId') teamId?: string,
   ): Promise<PaginatedResponseDto<PlayerEntity>> {
     return this.playersService.findPaginated(+id, nickname, +teamId, pagination);
+  }
+
+  @Get('all')
+  findAll(): Promise<PlayerEntity[]> {
+    return this.playersService.findAll();
   }
 
   @Get(':id')

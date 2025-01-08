@@ -8,7 +8,6 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { ApiOkResponsePaginated } from 'src/common/decorators/paginated-response.decorator';
 import { ApiPagination } from 'src/common/decorators/api-pagination.decorator';
 import { HeroesService } from './heroes.service';
-import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiBearerAuth()
 @Controller('heroes')
@@ -21,7 +20,6 @@ export class HeroesController {
     return this.heroesService.create(createHeroDto);
   }
 
-  @Public()
   @Get()
   @ApiQuery({ name: 'id', type: String, required: false })
   @ApiQuery({ name: 'cname', type: String, required: false })
@@ -37,7 +35,6 @@ export class HeroesController {
     return this.heroesService.findPaginated(+id, cname, name, pagination);
   }
 
-  @Public()
   @Get(':id')
   @ApiOkResponse({ type: HeroEntity })
   findOne(@Param('id') id: number): Promise<HeroEntity> {
