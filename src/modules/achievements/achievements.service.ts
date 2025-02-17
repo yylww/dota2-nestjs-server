@@ -38,6 +38,18 @@ export class AchievementsService {
     }
     const listPromise = this.prisma.achievement.findMany({
       where: whereConditions,
+      include: {
+        teams: {
+          select: {
+            name: true,
+          },
+        },
+        tournament: {
+          select: {
+            title: true,
+          },
+        },
+      },
       take,
       skip,
       orderBy: orderBy ? { [orderBy]: sortOrder } : undefined,
