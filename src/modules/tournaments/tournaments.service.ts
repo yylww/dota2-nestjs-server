@@ -60,7 +60,6 @@ export class TournamentsService {
   }
 
   update(updateTournamentDto: UpdateTournamentDto) {
-    console.log(111, updateTournamentDto);
     return this.prisma.tournament.update({
       where: { id: updateTournamentDto.id },
       data: updateTournamentDto,

@@ -41,11 +41,13 @@ export class AchievementsService {
       include: {
         teams: {
           select: {
+            id: true,
             name: true,
           },
         },
         tournament: {
           select: {
+            id: true,
             title: true,
           },
         },
