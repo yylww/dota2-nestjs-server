@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL") // uses connection pooling
+  url      = env("DATABASE_URL") // uses connection pooling
   // directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
@@ -112,9 +112,9 @@ model Stage {
   startDate    DateTime
   endDate      DateTime
   groups       Json
-  mode         Int
+  mode         Int // 0:循环赛 1:双败淘汰赛 2:单败淘汰赛 3:GSL赛制 4:瑞士轮
   bo           Int?
-  type         Int?
+  type         Int? // 0:线下赛 1:线上赛
   tournamentId Int
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
@@ -126,15 +126,15 @@ model Stage {
 model Match {
   id           Int        @id @default(autoincrement())
   startTime    DateTime
-  status       Int        @default(0)
+  status       Int        @default(0) // 0:未开始 1:进行中 2:已结束
   bo           Int
-  type         Int
-  extra        Boolean    @default(false)
+  type         Int // 0:线下赛 1:线上赛
+  extra        Boolean    @default(false) //是否加赛
   tournamentId Int
   stageId      Int
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
-  group        Int        @default(0)
+  group        Int        @default(0) // 0:无分组 1:胜者组 2:败者组 3:总决赛
   homeScore    Int        @default(0)
   awayScore    Int        @default(0)
   homeTeamId   Int

@@ -17,6 +17,7 @@ import { PlayersModule } from './modules/players/players.module';
 import { AchievementsModule } from './modules/achievements/achievements.module';
 import { TournamentsModule } from './modules/tournaments/tournaments.module';
 import { StagesModule } from './modules/stages/stages.module';
+import { MatchesModule } from './modules/matches/matches.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { StagesModule } from './modules/stages/stages.module';
     AchievementsModule,
     TournamentsModule,
     StagesModule,
+    MatchesModule,
   ],
   controllers: [AppController],
   providers: [

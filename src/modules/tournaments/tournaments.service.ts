@@ -19,6 +19,31 @@ export class TournamentsService {
 
   findAll() {
     return this.prisma.tournament.findMany({
+      select: {
+        id: true,
+        title: true,
+        stages: {
+          select: {
+            id: true,
+            title: true,
+            matches: {
+              select: {
+                id: true,
+                homeTeam: {
+                  select: {
+                    tag: true,
+                  },
+                },
+                awayTeam: {
+                  select: {
+                    tag: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
       orderBy: {
         startDate: 'desc',
       },
