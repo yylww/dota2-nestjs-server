@@ -18,11 +18,14 @@ export class TournamentsService {
   }
 
   findAll() {
-    return this.prisma.tournament.findMany();
+    return this.prisma.tournament.findMany({
+      orderBy: {
+        startDate: 'desc',
+      },
+    });
   }
 
   async findPaginated(
-    id: number,
     title: string,
     pagination: PaginationDto,
   ): Promise<PaginatedResponseDto<TournamentEntity>> {
@@ -30,9 +33,6 @@ export class TournamentsService {
     const skip = (current - 1) * pageSize;
     const take = pageSize;
     const whereConditions: Prisma.TournamentWhereInput = {};
-    if (id) {
-      whereConditions.id = { equals: id };
-    }
     if (title) {
       whereConditions.title = { contains: title, mode: 'insensitive' };
     }

@@ -30,10 +30,9 @@ export class TournamentsController {
   @ApiOkResponsePaginated(TournamentEntity)
   async findPaginated(
     @Query() pagination: PaginationDto,
-    @Query('id') id?: string,
     @Query('title') title?: string,
   ): Promise<PaginatedResponseDto<TournamentEntity>> {
-    return this.tournamentsService.findPaginated(+id, title, pagination);
+    return this.tournamentsService.findPaginated(title, pagination);
   }
 
   @Get(':id')
