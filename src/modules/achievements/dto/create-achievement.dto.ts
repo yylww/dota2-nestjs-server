@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateAchievementDto {
   @IsString()
@@ -16,4 +16,12 @@ export class CreateAchievementDto {
   @IsNumber()
   @IsNotEmpty()
   tournamentId: number;
+
+  @IsArray()
+  @IsNotEmpty()
+  players: number[];
+
+  @IsArray()
+  @IsNotEmpty()
+  teams: number[];
 }

@@ -12,8 +12,17 @@ export class AchievementsService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(createAchievementDto: CreateAchievementDto) {
+    const { players, teams, ...rest } = createAchievementDto;
     return this.prisma.achievement.create({
-      data: createAchievementDto,
+      data: {
+        ...rest,
+        players: {
+          connect: players.map((playerId) => ({ id: playerId })),
+        },
+        teams: {
+          connect: teams.map((teamId) => ({ id: teamId })),
+        },
+      },
     });
   }
 
@@ -74,13 +83,34 @@ export class AchievementsService {
   }
 
   update(id: number, updateAchievementDto: UpdateAchievementDto) {
+    const { players, teams, ...rest } = updateAchievementDto;
     return this.prisma.achievement.update({
       where: { id },
-      data: updateAchievementDto,
+      data: {
+        ...rest,
+        players: {
+          set: players.map((playerId) => ({ id: playerId })),
+        },
+        teams: {
+          set: teams.map((teamId) => ({ id: teamId })),
+        },
+      },
     });
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    // 删除achievement时，先删除相关teams、players
+    await this.prisma.achievement.update({
+      where: { id },
+      data: {
+        teams: {
+          deleteMany: {},
+        },
+        players: {
+          deleteMany: {},
+        },
+      },
+    });
     return this.prisma.achievement.delete({
       where: { id },
     });
