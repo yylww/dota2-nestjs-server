@@ -9,16 +9,12 @@ import { RegionEntity } from './entities/region.entity';
 export class RegionsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(): Promise<PaginatedResponseDto<RegionEntity>> {
-    const regions = await this.prisma.region.findMany({
+  async findAll() {
+    return this.prisma.region.findMany({
       orderBy: {
         id: 'asc',
       },
     });
-    return {
-      list: regions,
-      total: regions.length,
-    };
   }
 
   async findOne(id: number): Promise<RegionEntity> {
@@ -29,8 +25,8 @@ export class RegionsService {
     return this.prisma.region.create({ data });
   }
 
-  async update(data: UpdateRegionDto): Promise<RegionEntity> {
-    return this.prisma.region.update({ where: { id: data.id }, data });
+  async update(id: number, data: UpdateRegionDto): Promise<RegionEntity> {
+    return this.prisma.region.update({ where: { id }, data });
   }
 
   async remove(id: number): Promise<RegionEntity> {

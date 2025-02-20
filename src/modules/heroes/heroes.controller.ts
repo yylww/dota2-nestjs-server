@@ -35,21 +35,26 @@ export class HeroesController {
     return this.heroesService.findPaginated(+id, cname, name, pagination);
   }
 
+  @Get('all')
+  findAll(): Promise<HeroEntity[]> {
+    return this.heroesService.findAll();
+  }
+
   @Get(':id')
   @ApiOkResponse({ type: HeroEntity })
-  findOne(@Param('id') id: number): Promise<HeroEntity> {
+  findOne(@Param('id') id: string): Promise<HeroEntity> {
     return this.heroesService.findOne(+id);
   }
 
-  @Patch()
+  @Patch(':id')
   @ApiOkResponse({ type: HeroEntity })
-  update(@Body() updateHeroDto: UpdateHeroDto) {
-    return this.heroesService.update(updateHeroDto);
+  update(@Param('id') id: string, @Body() updateHeroDto: UpdateHeroDto) {
+    return this.heroesService.update(+id, updateHeroDto);
   }
 
   @Delete(':id')
   @ApiOkResponse({ type: HeroEntity })
-  remove(@Param('id') id: number): Promise<HeroEntity> {
+  remove(@Param('id') id: string): Promise<HeroEntity> {
     return this.heroesService.remove(+id);
   }
 }

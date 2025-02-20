@@ -17,9 +17,8 @@ export class RegionsController {
     return this.regionsService.create(createRegionDto);
   }
 
-  @Get()
-  @ApiOkResponsePaginated(RegionEntity)
-  async findAll(): Promise<PaginatedResponseDto<RegionEntity>> {
+  @Get('all')
+  async findAll(): Promise<RegionEntity[]> {
     return this.regionsService.findAll();
   }
 
@@ -29,10 +28,10 @@ export class RegionsController {
     return this.regionsService.findOne(Number(id));
   }
 
-  @Patch()
+  @Patch(':id')
   @ApiOkResponse({ type: RegionEntity })
-  update(@Body() updateRegionDto: UpdateRegionDto): Promise<RegionEntity> {
-    return this.regionsService.update(updateRegionDto);
+  update(@Param('id') id: string, @Body() updateRegionDto: UpdateRegionDto): Promise<RegionEntity> {
+    return this.regionsService.update(+id, updateRegionDto);
   }
 
   @Delete(':id')

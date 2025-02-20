@@ -17,6 +17,10 @@ export class HeroesService {
     });
   }
 
+  findAll(): Promise<HeroEntity[]> {
+    return this.prisma.hero.findMany();
+  }
+
   async findPaginated(
     id: number,
     cname: string,
@@ -59,9 +63,9 @@ export class HeroesService {
     });
   }
 
-  async update(data: UpdateHeroDto): Promise<HeroEntity> {
+  async update(id: number, data: UpdateHeroDto): Promise<HeroEntity> {
     return this.prisma.hero.update({
-      where: { id: data.id },
+      where: { id },
       data,
     });
   }
