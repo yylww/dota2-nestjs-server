@@ -54,7 +54,7 @@ export class TournamentsService {
     title: string,
     pagination: PaginationDto,
   ): Promise<PaginatedResponseDto<TournamentEntity>> {
-    const { current = 1, pageSize = 10, orderBy, sortOrder } = pagination;
+    const { current = 1, pageSize = 10, orderBy = 'id', sortOrder = 'desc' } = pagination;
     const skip = (current - 1) * pageSize;
     const take = pageSize;
     const whereConditions: Prisma.TournamentWhereInput = {};
@@ -65,7 +65,7 @@ export class TournamentsService {
       where: whereConditions,
       take,
       skip,
-      orderBy: orderBy ? { [orderBy]: sortOrder } : undefined,
+      orderBy: { [orderBy]: sortOrder },
     });
     const totalPromise = this.prisma.tournament.count({
       where: whereConditions,
@@ -84,9 +84,9 @@ export class TournamentsService {
     });
   }
 
-  update(updateTournamentDto: UpdateTournamentDto) {
+  update(id: number, updateTournamentDto: UpdateTournamentDto) {
     return this.prisma.tournament.update({
-      where: { id: updateTournamentDto.id },
+      where: { id },
       data: updateTournamentDto,
     });
   }

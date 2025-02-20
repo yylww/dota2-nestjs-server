@@ -38,9 +38,9 @@ export class AchievementsController {
     return this.achievementsService.findOne(+id);
   }
 
-  @Patch()
-  update(@Body() updateAchievementDto: UpdateAchievementDto) {
-    return this.achievementsService.update(updateAchievementDto);
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateAchievementDto: UpdateAchievementDto) {
+    return this.achievementsService.update(+id, updateAchievementDto);
   }
 
   @Delete(':id')

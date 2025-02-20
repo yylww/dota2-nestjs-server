@@ -8,6 +8,7 @@ import { ApiOkResponsePaginated } from 'src/common/decorators/paginated-response
 import { TournamentEntity } from './entities/tournament.entity';
 import { PaginatedResponseDto } from 'src/common/dto/paginated-response.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('tournaments')
 export class TournamentsController {
@@ -23,6 +24,7 @@ export class TournamentsController {
     return this.tournamentsService.findAll();
   }
 
+  @Public()
   @Get()
   @ApiQuery({ name: 'id', type: String, required: false })
   @ApiQuery({ name: 'title', type: String, required: false })
@@ -40,9 +42,9 @@ export class TournamentsController {
     return this.tournamentsService.findOne(+id);
   }
 
-  @Patch()
-  update(@Body() updateTournamentDto: UpdateTournamentDto) {
-    return this.tournamentsService.update(updateTournamentDto);
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateTournamentDto: UpdateTournamentDto) {
+    return this.tournamentsService.update(+id, updateTournamentDto);
   }
 
   @Delete(':id')

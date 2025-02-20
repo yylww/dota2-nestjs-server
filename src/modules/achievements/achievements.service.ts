@@ -23,7 +23,7 @@ export class AchievementsService {
     tournamentId: number,
     pagination: PaginationDto,
   ): Promise<PaginatedResponseDto<AchievementEntity>> {
-    const { current = 1, pageSize = 10, orderBy, sortOrder } = pagination;
+    const { current = 1, pageSize = 10, orderBy = 'id', sortOrder = 'desc' } = pagination;
     const skip = (current - 1) * pageSize;
     const take = pageSize;
     const whereConditions: Prisma.AchievementWhereInput = {};
@@ -73,9 +73,9 @@ export class AchievementsService {
     });
   }
 
-  update(updateAchievementDto: UpdateAchievementDto) {
+  update(id: number, updateAchievementDto: UpdateAchievementDto) {
     return this.prisma.achievement.update({
-      where: { id: updateAchievementDto.id },
+      where: { id },
       data: updateAchievementDto,
     });
   }
