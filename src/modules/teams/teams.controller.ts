@@ -46,10 +46,10 @@ export class TeamsController {
     return this.teamsService.findOne(+id);
   }
 
-  @Patch()
+  @Patch(':id')
   @ApiOkResponse({ type: TeamEntity })
-  update(@Body() updateTeamDto: UpdateTeamDto): Promise<TeamEntity> {
-    return this.teamsService.update(updateTeamDto);
+  update(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto): Promise<TeamEntity> {
+    return this.teamsService.update(+id, updateTeamDto);
   }
 
   @Delete(':id')

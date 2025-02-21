@@ -23,7 +23,7 @@ export class StagesService {
     tournamentId: number,
     pagination: PaginationDto,
   ): Promise<PaginatedResponseDto<StageEntity>> {
-    const { current = 1, pageSize = 10, orderBy, sortOrder } = pagination;
+    const { current = 1, pageSize = 10, orderBy = 'id', sortOrder = 'desc' } = pagination;
     const skip = (current - 1) * pageSize;
     const take = pageSize;
     const whereConditions: Prisma.StageWhereInput = {};
@@ -60,9 +60,9 @@ export class StagesService {
     });
   }
 
-  update(updateStageDto: UpdateStageDto) {
+  update(id: number, updateStageDto: UpdateStageDto) {
     return this.prisma.stage.update({
-      where: { id: updateStageDto.id },
+      where: { id },
       data: updateStageDto,
     });
   }

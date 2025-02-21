@@ -11,6 +11,11 @@ export class RegionsService {
 
   async findAll() {
     return this.prisma.region.findMany({
+      include: {
+        _count: {
+          select: { teams: true },
+        },
+      },
       orderBy: {
         id: 'asc',
       },

@@ -40,9 +40,9 @@ export class StagesController {
     return this.stagesService.findOne(+id);
   }
 
-  @Patch()
-  update(@Body() updateStageDto: UpdateStageDto) {
-    return this.stagesService.update(updateStageDto);
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateStageDto: UpdateStageDto) {
+    return this.stagesService.update(+id, updateStageDto);
   }
 
   @Delete(':id')

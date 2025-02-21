@@ -25,7 +25,7 @@ export class MatchesService {
     status: number,
     pagination: PaginationDto,
   ): Promise<PaginatedResponseDto<MatchEntity>> {
-    const { current = 1, pageSize = 10, orderBy, sortOrder } = pagination;
+    const { current = 1, pageSize = 10, orderBy = 'id', sortOrder = 'desc' } = pagination;
     const skip = (current - 1) * pageSize;
     const take = pageSize;
     const whereConditions: Prisma.MatchWhereInput = {};
@@ -85,9 +85,9 @@ export class MatchesService {
     });
   }
 
-  update(updateMatchDto: UpdateMatchDto) {
+  update(id: number, updateMatchDto: UpdateMatchDto) {
     return this.prisma.match.update({
-      where: { id: updateMatchDto.id },
+      where: { id },
       data: updateMatchDto,
     });
   }

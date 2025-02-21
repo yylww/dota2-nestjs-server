@@ -69,9 +69,9 @@ export class PlayersService {
     });
   }
 
-  update(updatePlayerDto: UpdatePlayerDto) {
+  update(id: number, updatePlayerDto: UpdatePlayerDto) {
     return this.prisma.player.update({
-      where: { id: updatePlayerDto.id },
+      where: { id },
       data: updatePlayerDto,
     });
   }

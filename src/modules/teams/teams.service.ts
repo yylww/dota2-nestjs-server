@@ -46,7 +46,7 @@ export class TeamsService {
       include: {
         region: {
           select: {
-            name: true,
+            cname: true,
           },
         },
         players: {
@@ -75,9 +75,9 @@ export class TeamsService {
     return this.prisma.team.findUnique({ where: { id } });
   }
 
-  update(updateTeamDto: UpdateTeamDto): Promise<TeamEntity> {
+  update(id: number, updateTeamDto: UpdateTeamDto): Promise<TeamEntity> {
     return this.prisma.team.update({
-      where: { id: updateTeamDto.id },
+      where: { id },
       data: updateTeamDto,
     });
   }

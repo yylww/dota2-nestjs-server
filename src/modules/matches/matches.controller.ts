@@ -42,9 +42,9 @@ export class MatchesController {
     return this.matchesService.findOne(+id);
   }
 
-  @Patch()
-  update(@Body() updateMatchDto: UpdateMatchDto) {
-    return this.matchesService.update(updateMatchDto);
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {
+    return this.matchesService.update(+id, updateMatchDto);
   }
 
   @Delete(':id')
