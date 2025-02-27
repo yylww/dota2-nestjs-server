@@ -10,6 +10,7 @@ import { PlayerEntity } from './entities/player.entity';
 @Injectable()
 export class PlayersService {
   constructor(private readonly prisma: PrismaService) {}
+
   create(createPlayerDto: CreatePlayerDto) {
     return this.prisma.player.create({
       data: createPlayerDto,
