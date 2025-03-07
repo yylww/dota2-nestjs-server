@@ -65,15 +65,15 @@ CREATE TABLE "Player" (
 CREATE TABLE "Tournament" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
-    "title_en" TEXT NOT NULL DEFAULT '',
     "description" TEXT NOT NULL,
-    "description_en" TEXT NOT NULL DEFAULT '',
-    "logo" TEXT DEFAULT '',
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
     "bonus" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "description_en" TEXT NOT NULL DEFAULT '',
+    "title_en" TEXT NOT NULL DEFAULT '',
+    "logo" TEXT DEFAULT '',
 
     CONSTRAINT "Tournament_pkey" PRIMARY KEY ("id")
 );
@@ -96,8 +96,6 @@ CREATE TABLE "Stage" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "rule" TEXT NOT NULL,
-    "title_en" TEXT NOT NULL DEFAULT '',
-    "rule_en" TEXT NOT NULL DEFAULT '',
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
     "groups" JSONB NOT NULL,
@@ -107,6 +105,8 @@ CREATE TABLE "Stage" (
     "tournamentId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "rule_en" TEXT NOT NULL DEFAULT '',
+    "title_en" TEXT NOT NULL DEFAULT '',
 
     CONSTRAINT "Stage_pkey" PRIMARY KEY ("id")
 );
@@ -124,10 +124,10 @@ CREATE TABLE "Match" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "group" INTEGER NOT NULL DEFAULT 0,
-    "homeScore" INTEGER NOT NULL DEFAULT 0,
-    "awayScore" INTEGER NOT NULL DEFAULT 0,
     "homeTeamId" INTEGER NOT NULL,
     "awayTeamId" INTEGER NOT NULL,
+    "awayScore" INTEGER NOT NULL DEFAULT 0,
+    "homeScore" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Match_pkey" PRIMARY KEY ("id")
 );
@@ -143,11 +143,11 @@ CREATE TABLE "Game" (
     "tournamentId" INTEGER NOT NULL,
     "stageId" INTEGER NOT NULL,
     "matchId" INTEGER NOT NULL,
-    "radiantWin" BOOLEAN NOT NULL DEFAULT true,
-    "radiantScore" INTEGER NOT NULL DEFAULT 0,
-    "direScore" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "radiantWin" BOOLEAN NOT NULL DEFAULT true,
+    "direScore" INTEGER NOT NULL DEFAULT 0,
+    "radiantScore" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Game_pkey" PRIMARY KEY ("id")
 );
@@ -198,9 +198,9 @@ CREATE TABLE "Record" (
     "denies" INTEGER NOT NULL,
     "netWorth" INTEGER NOT NULL,
     "healing" INTEGER NOT NULL,
-    "items" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "items" JSONB,
 
     CONSTRAINT "Record_pkey" PRIMARY KEY ("id")
 );
@@ -220,19 +220,25 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "_TeamToTournament" (
     "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
+    "B" INTEGER NOT NULL,
+
+    CONSTRAINT "_TeamToTournament_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateTable
 CREATE TABLE "_AchievementToPlayer" (
     "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
+    "B" INTEGER NOT NULL,
+
+    CONSTRAINT "_AchievementToPlayer_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateTable
 CREATE TABLE "_AchievementToTeam" (
     "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
+    "B" INTEGER NOT NULL,
+
+    CONSTRAINT "_AchievementToTeam_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateIndex
@@ -257,19 +263,10 @@ CREATE UNIQUE INDEX "Team_name_key" ON "Team"("name");
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_TeamToTournament_AB_unique" ON "_TeamToTournament"("A", "B");
-
--- CreateIndex
 CREATE INDEX "_TeamToTournament_B_index" ON "_TeamToTournament"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_AchievementToPlayer_AB_unique" ON "_AchievementToPlayer"("A", "B");
-
--- CreateIndex
 CREATE INDEX "_AchievementToPlayer_B_index" ON "_AchievementToPlayer"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_AchievementToTeam_AB_unique" ON "_AchievementToTeam"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_AchievementToTeam_B_index" ON "_AchievementToTeam"("B");
@@ -287,16 +284,16 @@ ALTER TABLE "Achievement" ADD CONSTRAINT "Achievement_tournamentId_fkey" FOREIGN
 ALTER TABLE "Stage" ADD CONSTRAINT "Stage_tournamentId_fkey" FOREIGN KEY ("tournamentId") REFERENCES "Tournament"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Match" ADD CONSTRAINT "Match_stageId_fkey" FOREIGN KEY ("stageId") REFERENCES "Stage"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Match" ADD CONSTRAINT "Match_tournamentId_fkey" FOREIGN KEY ("tournamentId") REFERENCES "Tournament"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Match" ADD CONSTRAINT "Match_awayTeamId_fkey" FOREIGN KEY ("awayTeamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Match" ADD CONSTRAINT "Match_homeTeamId_fkey" FOREIGN KEY ("homeTeamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Match" ADD CONSTRAINT "Match_awayTeamId_fkey" FOREIGN KEY ("awayTeamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Match" ADD CONSTRAINT "Match_stageId_fkey" FOREIGN KEY ("stageId") REFERENCES "Stage"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Match" ADD CONSTRAINT "Match_tournamentId_fkey" FOREIGN KEY ("tournamentId") REFERENCES "Tournament"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Game" ADD CONSTRAINT "Game_direTeamId_fkey" FOREIGN KEY ("direTeamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -317,19 +314,10 @@ ALTER TABLE "Game" ADD CONSTRAINT "Game_tournamentId_fkey" FOREIGN KEY ("tournam
 ALTER TABLE "Ban" ADD CONSTRAINT "Ban_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Ban" ADD CONSTRAINT "Ban_heroId_fkey" FOREIGN KEY ("heroId") REFERENCES "Hero"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Pick" ADD CONSTRAINT "Pick_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Pick" ADD CONSTRAINT "Pick_heroId_fkey" FOREIGN KEY ("heroId") REFERENCES "Hero"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Record" ADD CONSTRAINT "Record_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Record" ADD CONSTRAINT "Record_heroId_fkey" FOREIGN KEY ("heroId") REFERENCES "Hero"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Record" ADD CONSTRAINT "Record_playerId_fkey" FOREIGN KEY ("playerId") REFERENCES "Player"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
