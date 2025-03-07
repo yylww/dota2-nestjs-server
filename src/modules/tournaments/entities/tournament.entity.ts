@@ -2,6 +2,7 @@ import { Tournament } from '@prisma/client';
 
 export class TournamentEntity implements Tournament {
   id: number;
+  leagueId: number | null;
   title: string;
   title_en: string;
   description: string;
