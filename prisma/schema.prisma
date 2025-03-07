@@ -4,8 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL") // uses connection pooling
-  // directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url      = env("DATABASE_URL")
 }
 
 model Hero {
@@ -15,9 +14,6 @@ model Hero {
   avatar    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  bans      Ban[]
-  picks     Pick[]
-  records   Record[]
 }
 
 model Item {
@@ -50,11 +46,11 @@ model Team {
   updatedAt    DateTime      @updatedAt
   dires        Game[]        @relation("dire")
   radiants     Game[]        @relation("radiant")
+  awayMatches  Match[]       @relation("awayTeam")
+  homeMatches  Match[]       @relation("homeTeam")
   players      Player[]
   region       Region        @relation(fields: [regionId], references: [id])
   achievements Achievement[] @relation("AchievementToTeam")
-  homeMatches  Match[]       @relation("homeTeam")
-  awayMatches  Match[]       @relation("awayTeam")
   tournament   Tournament[]  @relation("TeamToTournament")
 }
 
@@ -74,15 +70,15 @@ model Player {
 model Tournament {
   id             Int           @id @default(autoincrement())
   title          String
-  title_en       String        @default("")
   description    String
-  description_en String        @default("")
-  logo           String?       @default("")
   startDate      DateTime
   endDate        DateTime
   bonus          Int           @default(0)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
+  description_en String        @default("")
+  title_en       String        @default("")
+  logo           String?       @default("")
   achievements   Achievement[]
   games          Game[]
   matches        Match[]
@@ -107,17 +103,17 @@ model Stage {
   id           Int        @id @default(autoincrement())
   title        String
   rule         String
-  title_en     String     @default("")
-  rule_en      String     @default("")
   startDate    DateTime
   endDate      DateTime
   groups       Json
-  mode         Int // 0:循环赛 1:双败淘汰赛 2:单败淘汰赛 3:GSL赛制 4:瑞士轮
+  mode         Int
   bo           Int?
-  type         Int? // 0:线下赛 1:线上赛
+  type         Int?
   tournamentId Int
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+  rule_en      String     @default("")
+  title_en     String     @default("")
   games        Game[]
   matches      Match[]
   tournament   Tournament @relation(fields: [tournamentId], references: [id])
@@ -126,29 +122,29 @@ model Stage {
 model Match {
   id           Int        @id @default(autoincrement())
   startTime    DateTime
-  status       Int        @default(0) // 0:未开始 1:进行中 2:已结束
+  status       Int        @default(0)
   bo           Int
-  type         Int // 0:线下赛 1:线上赛
-  extra        Boolean    @default(false) //是否加赛
+  type         Int
+  extra        Boolean    @default(false)
   tournamentId Int
   stageId      Int
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
-  group        Int        @default(0) // 0:无分组 1:胜者组 2:败者组 3:总决赛
-  homeScore    Int        @default(0)
-  awayScore    Int        @default(0)
+  group        Int        @default(0)
   homeTeamId   Int
   awayTeamId   Int
+  awayScore    Int        @default(0)
+  homeScore    Int        @default(0)
+  games        Game[]
+  awayTeam     Team       @relation("awayTeam", fields: [awayTeamId], references: [id])
+  homeTeam     Team       @relation("homeTeam", fields: [homeTeamId], references: [id])
   stage        Stage      @relation(fields: [stageId], references: [id])
   tournament   Tournament @relation(fields: [tournamentId], references: [id])
-  homeTeam     Team       @relation(name: "homeTeam", fields: [homeTeamId], references: [id])
-  awayTeam     Team       @relation(name: "awayTeam", fields: [awayTeamId], references: [id])
-  games        Game[]
 }
 
 model Game {
   id            String     @id
-  type          Int // 比赛模式 0:队长模式 1: solo模式
+  type          Int
   startTime     DateTime
   duration      Int
   radiantTeamId Int
@@ -156,17 +152,17 @@ model Game {
   tournamentId  Int
   stageId       Int
   matchId       Int
-  radiantWin    Boolean    @default(true)
-  radiantScore  Int        @default(0)
-  direScore     Int        @default(0)
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+  radiantWin    Boolean    @default(true)
+  direScore     Int        @default(0)
+  radiantScore  Int        @default(0)
+  bans          Ban[]
   dire          Team       @relation("dire", fields: [direTeamId], references: [id])
   match         Match      @relation(fields: [matchId], references: [id])
   radiant       Team       @relation("radiant", fields: [radiantTeamId], references: [id])
   stage         Stage      @relation(fields: [stageId], references: [id])
   tournament    Tournament @relation(fields: [tournamentId], references: [id])
-  bans          Ban[]
   picks         Pick[]
   records       Record[]
 }
@@ -180,7 +176,6 @@ model Ban {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   game      Game     @relation(fields: [gameId], references: [id])
-  hero      Hero     @relation(fields: [heroId], references: [id])
 }
 
 model Pick {
@@ -192,7 +187,6 @@ model Pick {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   game      Game     @relation(fields: [gameId], references: [id])
-  hero      Hero     @relation(fields: [heroId], references: [id])
 }
 
 model Record {
@@ -214,11 +208,10 @@ model Record {
   denies      Int
   netWorth    Int
   healing     Int
-  items       Json?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  items       Json?
   game        Game     @relation(fields: [gameId], references: [id])
-  hero        Hero     @relation(fields: [heroId], references: [id])
   player      Player   @relation(fields: [playerId], references: [id])
 }
 
