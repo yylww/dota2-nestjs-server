@@ -12,8 +12,14 @@ export class TournamentsService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(createTournamentDto: CreateTournamentDto) {
+    const { teams, ...rest } = createTournamentDto;
     return this.prisma.tournament.create({
-      data: createTournamentDto,
+      data: {
+        ...rest,
+        teams: {
+          connect: teams.map((id) => ({ id })),
+        },
+      },
     });
   }
 
@@ -81,13 +87,26 @@ export class TournamentsService {
   findOne(id: number) {
     return this.prisma.tournament.findUnique({
       where: { id },
+      include: {
+        teams: {
+          select: {
+            id: true,
+          },
+        },
+      },
     });
   }
 
   update(id: number, updateTournamentDto: UpdateTournamentDto) {
+    const { teams, ...rest } = updateTournamentDto;
     return this.prisma.tournament.update({
       where: { id },
-      data: updateTournamentDto,
+      data: {
+        ...rest,
+        teams: {
+          set: teams.map((id) => ({ id })),
+        },
+      },
     });
   }
 

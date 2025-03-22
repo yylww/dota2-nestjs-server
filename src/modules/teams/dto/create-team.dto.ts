@@ -23,5 +23,5 @@ export class CreateTeamDto {
 
   @IsNotEmpty()
   @IsNumber()
-  status: number;
+  status: number; // 1: 正常, 2: 停摆, 3: 解散
 }

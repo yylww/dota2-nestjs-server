@@ -1,5 +1,5 @@
 import { Ban, Pick, Record } from '@prisma/client';
-import { IsArray, IsDateString, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsDateString, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateGameDto {
   @IsString()
@@ -17,6 +17,18 @@ export class CreateGameDto {
   @IsNumber()
   @IsNotEmpty()
   duration: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  radiantScore: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  direScore: number;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  radiantWin: boolean;
 
   @IsNumber()
   @IsNotEmpty()

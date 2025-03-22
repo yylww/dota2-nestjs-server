@@ -16,5 +16,6 @@ export class MatchEntity implements Match {
   stageId: number;
   homeTeamId: number;
   awayTeamId: number;
-  relateMatchId: number | null;
+  homeRelateMatchId: number | null;
+  awayRelateMatchId: number | null;
 }

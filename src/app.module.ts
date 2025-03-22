@@ -20,6 +20,7 @@ import { StagesModule } from './modules/stages/stages.module';
 import { MatchesModule } from './modules/matches/matches.module';
 import { GamesModule } from './modules/games/games.module';
 import { RecordsModule } from './modules/records/records.module';
+import { ItemsModule } from './modules/items/items.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { RecordsModule } from './modules/records/records.module';
     MatchesModule,
     GamesModule,
     RecordsModule,
+    ItemsModule,
   ],
   controllers: [AppController],
   providers: [

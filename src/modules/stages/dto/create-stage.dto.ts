@@ -7,7 +7,15 @@ export class CreateStageDto {
 
   @IsString()
   @IsNotEmpty()
+  title_en: string;
+
+  @IsString()
+  @IsNotEmpty()
   rule: string;
+
+  @IsString()
+  @IsNotEmpty()
+  rule_en: string;
 
   @IsNumber()
   @IsNotEmpty()

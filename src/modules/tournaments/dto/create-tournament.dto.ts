@@ -1,6 +1,14 @@
-import { IsDateString, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTournamentDto {
+  @IsNumber()
+  @IsOptional()
+  leagueId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  status: number;
+
   @IsString()
   @IsNotEmpty()
   title: string;
@@ -32,4 +40,8 @@ export class CreateTournamentDto {
   @IsNumber()
   @IsNotEmpty()
   bonus: number;
+
+  @IsArray()
+  @IsNotEmpty()
+  teams: number[];
 }

@@ -16,7 +16,15 @@ export class TeamsService {
   }
 
   findAll(): Promise<TeamEntity[]> {
-    return this.prisma.team.findMany();
+    return this.prisma.team.findMany({
+      include: {
+        players: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
   }
 
   async findPaginated(

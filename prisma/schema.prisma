@@ -80,29 +80,32 @@ model Item {
 }
 
 model Match {
-  id             Int        @id @default(autoincrement())
-  startTime      DateTime
-  status         Int        @default(0)
-  bo             Int
-  type           Int
-  extra          Boolean    @default(false)
-  tournamentId   Int
-  stageId        Int
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  group          Int        @default(0)
-  homeTeamId     Int?
-  awayTeamId     Int?
-  awayScore      Int        @default(0)
-  homeScore      Int        @default(0)
-  games          Game[]
-  awayTeam       Team?      @relation("Match_awayTeamIdToTeam", fields: [awayTeamId], references: [id])
-  homeTeam       Team?      @relation("Match_homeTeamIdToTeam", fields: [homeTeamId], references: [id])
-  stage          Stage      @relation(fields: [stageId], references: [id])
-  tournament     Tournament @relation(fields: [tournamentId], references: [id])
-  relateMatchId  Int?
-  relateMatch    Match?     @relation("relate_match", fields: [relateMatchId], references: [id])
-  relatedMatches Match[]    @relation("relate_match")
+  id                 Int        @id @default(autoincrement())
+  startTime          DateTime
+  status             Int        @default(0)
+  bo                 Int
+  type               Int
+  extra              Boolean    @default(false)
+  tournamentId       Int
+  stageId            Int
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  group              Int        @default(0) // 0: 其他, 1: 胜者组, 2: 败者组 3: 总决赛
+  homeTeamId         Int?
+  awayTeamId         Int?
+  awayScore          Int        @default(0)
+  homeScore          Int        @default(0)
+  games              Game[]
+  awayTeam           Team?      @relation("Match_awayTeamIdToTeam", fields: [awayTeamId], references: [id])
+  homeTeam           Team?      @relation("Match_homeTeamIdToTeam", fields: [homeTeamId], references: [id])
+  stage              Stage      @relation(fields: [stageId], references: [id])
+  tournament         Tournament @relation(fields: [tournamentId], references: [id])
+  awayRelateMatchId  Int?
+  awayRelateMatch    Match?     @relation("away_relate_match", fields: [awayRelateMatchId], references: [id])
+  awayRelatedMatches Match[]    @relation("away_relate_match")
+  homeRelateMatchId  Int?
+  homeRelateMatch    Match?     @relation("home_relate_match", fields: [homeRelateMatchId], references: [id])
+  homeRelatedMatches Match[]    @relation("home_relate_match")
 }
 
 model Pick {
@@ -207,6 +210,7 @@ model Team {
 
 model Tournament {
   id             Int           @id @default(autoincrement())
+  status         Int           @default(0)
   leagueId       Int?
   title          String
   description    String
