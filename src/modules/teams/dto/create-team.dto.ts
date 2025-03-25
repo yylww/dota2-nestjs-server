@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTeamDto {
   @IsNotEmpty()
@@ -24,4 +24,7 @@ export class CreateTeamDto {
   @IsNotEmpty()
   @IsNumber()
   status: number; // 1: 正常, 2: 停摆, 3: 解散
+
+  @IsArray()
+  players: number[];
 }

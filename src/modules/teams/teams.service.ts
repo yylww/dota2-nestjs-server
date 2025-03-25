@@ -12,7 +12,15 @@ export class TeamsService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(createTeamDto: CreateTeamDto): Promise<TeamEntity> {
-    return this.prisma.team.create({ data: createTeamDto });
+    const { players, ...rest } = createTeamDto;
+    return this.prisma.team.create({
+      data: {
+        ...rest,
+        players: {
+          connect: players.map((id) => ({ id })),
+        },
+      },
+    });
   }
 
   findAll(): Promise<TeamEntity[]> {
@@ -80,13 +88,24 @@ export class TeamsService {
   }
 
   findOne(id: number): Promise<TeamEntity> {
-    return this.prisma.team.findUnique({ where: { id } });
+    return this.prisma.team.findUnique({
+      where: { id },
+      include: {
+        players: true,
+      },
+    });
   }
 
   update(id: number, updateTeamDto: UpdateTeamDto): Promise<TeamEntity> {
+    const { players, ...rest } = updateTeamDto;
     return this.prisma.team.update({
       where: { id },
-      data: updateTeamDto,
+      data: {
+        ...rest,
+        players: {
+          set: players.map((id) => ({ id })),
+        },
+      },
     });
   }
 
