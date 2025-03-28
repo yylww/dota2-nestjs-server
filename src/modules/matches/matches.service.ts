@@ -56,11 +56,13 @@ export class MatchesService {
         homeTeam: {
           select: {
             tag: true,
+            players: true,
           },
         },
         awayTeam: {
           select: {
             tag: true,
+            players: true,
           },
         },
       },

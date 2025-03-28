@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { json } from 'stream/consumers';
 // const fs = require('fs');
 // const path = require('path');
 // const axios = require('axios');
@@ -48,6 +49,38 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
+  // team id change
+  // await prisma.team.update({
+  //   where: {
+  //     id: 9344582,
+  //   },
+  //   data: {
+  //     id: 8376696,
+  //   },
+  // });
+  // const data = await prisma.stage.findMany({
+  //   select: {
+  //     id: true,
+  //     groups: true,
+  //   },
+  // });
+  // const arr = [];
+  // for (const item of data) {
+  //   let jsonStr = JSON.stringify(item.groups);
+  //   if (jsonStr.includes('9344582')) {
+  //     console.log('replace', item.id);
+  //     arr.push(item.id);
+  //     await prisma.stage.update({
+  //       where: {
+  //         id: item.id,
+  //       },
+  //       data: {
+  //         groups: JSON.parse(jsonStr.replace('9344582', '8376696')),
+  //       },
+  //     });
+  //   }
+  // }
+  // console.log(arr);
   // const res = await fetch('https://www.dota2.com.cn/items/json');
   // const { itemdata } = await res.json();
   // const arr = Object.keys(itemdata).map((key) => {

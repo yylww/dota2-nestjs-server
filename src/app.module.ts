@@ -21,6 +21,7 @@ import { MatchesModule } from './modules/matches/matches.module';
 import { GamesModule } from './modules/games/games.module';
 import { RecordsModule } from './modules/records/records.module';
 import { ItemsModule } from './modules/items/items.module';
+import { WebModule } from './modules/web/web.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ItemsModule } from './modules/items/items.module';
     GamesModule,
     RecordsModule,
     ItemsModule,
+    WebModule,
   ],
   controllers: [AppController],
   providers: [
