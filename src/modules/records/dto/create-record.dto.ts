@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateRecordDto {
   @IsNumber()
@@ -68,4 +68,8 @@ export class CreateRecordDto {
   @IsNumber()
   @IsNotEmpty()
   healing: number;
+
+  @IsOptional()
+  @IsArray()
+  items: object;
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, Delete, Query } from '@nestjs/common';
 import { RecordsService } from './records.service';
 import { CreateRecordDto } from './dto/create-record.dto';
 import { ApiQuery } from '@nestjs/swagger';
@@ -7,6 +7,7 @@ import { ApiOkResponsePaginated } from 'src/common/decorators/paginated-response
 import { RecordEntity } from './entities/record.entity';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { PaginatedResponseDto } from 'src/common/dto/paginated-response.dto';
+import { UpdateRecordDto } from './dto/update-record.dto';
 
 @Controller('records')
 export class RecordsController {
@@ -33,6 +34,11 @@ export class RecordsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.recordsService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateRecordDto: UpdateRecordDto) {
+    return this.recordsService.update(+id, updateRecordDto);
   }
 
   @Delete(':id')

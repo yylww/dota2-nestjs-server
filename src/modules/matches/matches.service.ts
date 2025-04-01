@@ -45,6 +45,7 @@ export class MatchesService {
           select: {
             id: true,
             title: true,
+            leagueId: true,
           },
         },
         stage: {
@@ -84,6 +85,18 @@ export class MatchesService {
   findOne(id: number) {
     return this.prisma.match.findUnique({
       where: { id },
+      include: {
+        games: {
+          select: {
+            id: true,
+            records: {
+              select: {
+                playerId: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 

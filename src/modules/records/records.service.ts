@@ -5,6 +5,7 @@ import { PaginatedResponseDto } from 'src/common/dto/paginated-response.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { Prisma } from '@prisma/client';
 import { RecordEntity } from './entities/record.entity';
+import { UpdateRecordDto } from './dto/update-record.dto';
 
 @Injectable()
 export class RecordsService {
@@ -64,6 +65,13 @@ export class RecordsService {
   findOne(id: number) {
     return this.prisma.record.findUnique({
       where: { id },
+    });
+  }
+
+  update(id: number, updateRecordDto: UpdateRecordDto) {
+    return this.prisma.record.update({
+      where: { id },
+      data: updateRecordDto,
     });
   }
 
