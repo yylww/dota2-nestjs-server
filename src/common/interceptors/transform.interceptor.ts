@@ -13,6 +13,7 @@ export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> 
       map((data) => {
         return {
           statusCode: 200,
+          success: true,
           data,
         };
       }),

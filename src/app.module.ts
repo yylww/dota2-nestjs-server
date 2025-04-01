@@ -59,14 +59,14 @@ import { WebModule } from './modules/web/web.module';
         whitelist: true,
       }),
     },
-    // {
-    //   provide: APP_FILTER,
-    //   useClass: HttpExceptionFilter,
-    // },
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: TransformInterceptor,
-    // },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
   ],
 })
 export class AppModule {}

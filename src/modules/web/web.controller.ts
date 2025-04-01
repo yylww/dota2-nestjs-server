@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, Res } from '@nestjs/common';
 import { WebService } from './web.service';
 import { Public } from 'src/common/decorators/public.decorator';
 
@@ -15,5 +15,10 @@ export class WebController {
   @Get('matches')
   getMatches(@Query('tournamentId') tournamentId: string) {
     return this.webService.findMatchesByTournamentId(+tournamentId);
+  }
+
+  @Get('matches/:id')
+  async getMatch(@Param('id') id: string) {
+    return this.webService.findMatchById(+id);
   }
 }

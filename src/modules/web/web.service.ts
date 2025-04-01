@@ -35,4 +35,50 @@ export class WebService {
       orderBy: [{ startTime: 'desc' }],
     });
   }
+
+  findMatchById(id: number) {
+    return this.prisma.match.findUnique({
+      where: { id },
+      include: {
+        games: {
+          include: {
+            records: {
+              include: {
+                player: true,
+                hero: true,
+              },
+            },
+            bans: {
+              include: {
+                hero: true,
+              },
+            },
+            picks: {
+              include: {
+                hero: true,
+              },
+            },
+            radiant: true,
+            dire: true,
+          },
+        },
+        homeTeam: true,
+        awayTeam: true,
+        tournament: {
+          select: {
+            id: true,
+            title: true,
+            title_en: true,
+          },
+        },
+        stage: {
+          select: {
+            id: true,
+            title: true,
+            title_en: true,
+          },
+        },
+      },
+    });
+  }
 }
